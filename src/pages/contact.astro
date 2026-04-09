@@ -1,0 +1,128 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Contact" description="Get in touch with the New England Cycling Coalition for Diversity.">
+
+  <section class="section">
+    <div class="container contact-wrap">
+
+      <div class="section-label">Get in touch</div>
+      <h1 class="section-heading">Contact NECCD</h1>
+
+      <div class="contact-grid">
+        <div class="contact-body">
+          <p>The best way to reach us and stay connected is through our Band community. For direct inquiries, use the form below or email us.</p>
+
+          <div class="contact-options">
+            <a href="https://band.us/@neccd" class="contact-option" target="_blank" rel="noopener">
+              <div class="co-icon">💬</div>
+              <div>
+                <div class="co-label">Join our Band community</div>
+                <div class="co-desc">The fastest way to connect with NECCD and stay up to date on rides and events.</div>
+              </div>
+            </a>
+            <a href="mailto:info@neccd.bike" class="contact-option">
+              <div class="co-icon">✉️</div>
+              <div>
+                <div class="co-label">Email us</div>
+                <div class="co-desc">info@neccd.bike</div>
+              </div>
+            </a>
+          </div>
+
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:1rem;">
+            You can also use Netlify Forms below (replace this with a real form service once deployed):
+          </p>
+
+          <!-- Netlify Forms: add netlify attribute when deploying -->
+          <form name="contact" method="POST" data-netlify="true" class="contact-form">
+            <input type="hidden" name="form-name" value="contact" />
+            <div class="form-group">
+              <label for="name">Your name</label>
+              <input type="text" id="name" name="name" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email address</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Send message</button>
+          </form>
+        </div>
+
+        <aside class="contact-aside">
+          <div class="card aside-card">
+            <h3>Coming to a ride?</h3>
+            <p>You don't need to contact us first — just show up! All our rides are open to everyone. Check the <a href="/events">events calendar</a> for upcoming rides.</p>
+          </div>
+          <div class="card aside-card">
+            <h3>Media inquiries</h3>
+            <p>For press and media requests, please email <a href="mailto:info@neccd.bike">info@neccd.bike</a> with "Media" in the subject line.</p>
+          </div>
+        </aside>
+      </div>
+
+    </div>
+  </section>
+
+</Base>
+
+<style>
+.contact-wrap { max-width: 900px; }
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 3rem;
+  align-items: start;
+}
+@media (max-width: 720px) { .contact-grid { grid-template-columns: 1fr; } }
+
+.contact-body p { font-size: 0.95rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.25rem; }
+
+.contact-options { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; }
+.contact-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+.contact-option:hover { border-color: var(--border-mid); }
+.co-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+.co-label { font-weight: 500; font-size: 0.9rem; color: var(--text); }
+.co-desc { font-size: 0.82rem; color: var(--muted); margin-top: 0.2rem; }
+
+.contact-form { display: flex; flex-direction: column; gap: 1rem; }
+.form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+.form-group label { font-size: 0.85rem; font-weight: 500; color: var(--text); }
+.form-group input,
+.form-group textarea {
+  padding: 0.6rem 0.85rem;
+  border: 0.5px solid var(--border-mid);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--bg);
+  transition: border-color 0.15s;
+  resize: vertical;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--green);
+}
+
+.aside-card { padding: 1.1rem 1.25rem; margin-bottom: 1rem; }
+.aside-card h3 { font-size: 0.95rem; font-weight: 500; margin-bottom: 0.4rem; }
+.aside-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+.aside-card a { color: var(--green); }
+</style>

@@ -1,0 +1,179 @@
+---
+import Base from '../layouts/Base.astro';
+
+const eventModules = import.meta.glob('../content/events/*.md', { eager: true });
+const newsModules  = import.meta.glob('../content/news/*.md',   { eager: true });
+
+const today = new Date();
+today.setHours(0,0,0,0);
+
+const upcomingEvents = Object.entries(eventModules)
+  .map(([path, mod]) => ({ ...mod.frontmatter, slug: path.split('/').pop().replace('.md','') }))
+  .filter(e => new Date(e.date) >= today)
+  .sort((a,b) => new Date(a.date) - new Date(b.date))
+  .slice(0, 3);
+
+const latestNews = Object.entries(newsModules)
+  .map(([path, mod]) => ({ ...mod.frontmatter, slug: path.split('/').pop().replace('.md','') }))
+  .sort((a,b) => new Date(b.date) - new Date(a.date))
+  .slice(0, 3);
+
+const tagClass  = { Ride: 'tag-ride', Community: 'tag-community', Advocacy: 'tag-advocacy', Resources: 'tag-resources' };
+const bandColors = { Ride: '#3B6D11', Community: '#BA7517', Advocacy: '#D85A30', Resources: '#1D9E75' };
+
+function fmtDate(d) {
+  return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+---
+
+<Base title="Home" description="New England Cycling Coalition for Diversity — community rides, advocacy, and cycling equity in New England.">
+
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <div class="section-label">Diversity · Equity · Inclusion</div>
+        <h1 class="hero-title">Cycling is for <em>everyone</em> in New England</h1>
+        <p class="hero-body">NECCD builds community, advocates for inclusive infrastructure, and creates joyful riding experiences for cyclists of all backgrounds.</p>
+        <div class="hero-actions">
+          <a href="/events" class="btn btn-primary">See upcoming rides</a>
+          <a href="/about" class="btn btn-ghost">Our mission</a>
+        </div>
+      </div>
+
+      <aside class="hero-aside">
+        <div class="aside-label">Upcoming events</div>
+        {upcomingEvents.length === 0 && <p style="font-size:0.85rem;color:var(--muted);">No upcoming events yet — check back soon!</p>}
+        {upcomingEvents.map(e => (
+          <a href={`/events/${e.slug}`} class="event-chip">
+            <div class="chip-date">{fmtDate(e.date)} · {e.time}</div>
+            <div class="chip-title">{e.title}</div>
+            <div class="chip-loc">{e.location}</div>
+          </a>
+        ))}
+        <a href="/events" class="aside-more">All events →</a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="section-label">On the calendar</div>
+          <h2 class="section-heading">Upcoming rides &amp; events</h2>
+        </div>
+        <a href="/events" class="see-all">All events →</a>
+      </div>
+      {upcomingEvents.length === 0 && (
+        <p style="color:var(--muted);">No upcoming events yet. <a href="/events" style="color:var(--green);">Check the events page</a> for updates.</p>
+      )}
+      <div class="events-grid">
+        {upcomingEvents.map(e => (
+          <a href={`/events/${e.slug}`} class="card event-card">
+            <div class="event-card-band" style={`background:${bandColors[e.tag] || '#3B6D11'}`}></div>
+            <div class="event-card-body">
+              <span class:list={['tag', tagClass[e.tag] || 'tag-ride']} style="margin-bottom:0.5rem;display:inline-block;">{e.tag}</span>
+              <div class="event-card-date">{fmtDate(e.date)}</div>
+              <div class="event-card-title">{e.title}</div>
+              <div class="event-card-loc">{e.location} · {e.time}</div>
+              <p class="event-card-desc">{e.shortDescription}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="section-label">Latest from NECCD</div>
+          <h2 class="section-heading">News &amp; updates</h2>
+        </div>
+        <a href="/news" class="see-all">All news →</a>
+      </div>
+      <div class="news-list">
+        {latestNews.map(n => (
+          <a href={`/news/${n.slug}`} class="news-item">
+            <div class="news-date-block">
+              <span class="ndm">{new Date(n.date+'T12:00:00').toLocaleDateString('en-US',{month:'short'})}</span>
+              <span class="ndd">{new Date(n.date+'T12:00:00').getDate()}</span>
+              <span class="ndy">{new Date(n.date+'T12:00:00').getFullYear()}</span>
+            </div>
+            <div class="news-item-body">
+              <span class:list={['tag', tagClass[n.tag] || 'tag-news']}>{n.tag}</span>
+              <div class="news-item-title">{n.title}</div>
+              <p class="news-item-excerpt">{n.excerpt}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="about-strip">
+        <div>
+          <div class="section-label">Who we are</div>
+          <h2 class="about-strip-title">Building a more inclusive cycling community</h2>
+          <p class="about-strip-body">NECCD is a grassroots coalition working to make cycling in New England welcoming, safe, and accessible to riders from all communities — especially those historically excluded from cycling spaces.</p>
+          <a href="/about" class="btn btn-primary" style="margin-top:1.25rem;">Learn more about us</a>
+        </div>
+        <div class="stats">
+          <div class="stat"><span class="stat-num">6+</span><span class="stat-label">years of community rides</span></div>
+          <div class="stat"><span class="stat-num">40+</span><span class="stat-label">events organized annually</span></div>
+          <div class="stat"><span class="stat-num">500+</span><span class="stat-label">community members</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</Base>
+
+<style>
+.hero { padding: 4rem 0 3rem; border-bottom: 0.5px solid var(--border); }
+.hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+@media (max-width:720px) { .hero-inner { grid-template-columns:1fr; } }
+.hero-title { font-family: 'Fraunces', serif; font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 600; line-height: 1.2; margin: 0.5rem 0 1rem; }
+.hero-title em { color: var(--green); font-style: italic; }
+.hero-body { color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
+.hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.hero-aside { background: var(--green-light); border-radius: var(--radius); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.aside-label { font-size: 0.72rem; font-weight: 500; color: var(--green-dark); text-transform: uppercase; letter-spacing: 0.08em; }
+.aside-more { font-size: 0.8rem; color: var(--green); }
+.aside-more:hover { text-decoration: underline; }
+.event-chip { background: var(--bg); border-radius: 8px; padding: 0.75rem 1rem; border: 0.5px solid var(--border); display: block; transition: border-color 0.15s; }
+.event-chip:hover { border-color: var(--border-mid); }
+.chip-date { font-size: 0.7rem; font-weight: 500; color: var(--green-mid); }
+.chip-title { font-size: 0.9rem; font-weight: 500; color: var(--text); margin-top: 0.15rem; }
+.chip-loc { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; }
+.events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+.event-card { display: block; text-decoration: none; }
+.event-card-band { height: 5px; }
+.event-card-body { padding: 1rem; }
+.event-card-date { font-size: 0.72rem; font-weight: 500; color: var(--green-mid); margin-bottom: 0.2rem; }
+.event-card-title { font-weight: 500; font-size: 0.95rem; margin-bottom: 0.25rem; }
+.event-card-loc { font-size: 0.78rem; color: var(--muted); }
+.event-card-desc { font-size: 0.8rem; color: var(--muted); margin-top: 0.4rem; line-height: 1.5; }
+.news-list { display: flex; flex-direction: column; }
+.news-item { display: grid; grid-template-columns: 72px 1fr; gap: 1rem; padding: 1.1rem 0; border-bottom: 0.5px solid var(--border); transition: opacity 0.15s; }
+.news-item:last-child { border-bottom: none; }
+.news-item:hover { opacity: 0.8; }
+.news-date-block { background: var(--gray-50); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.5rem 0.25rem; flex-shrink: 0; }
+.ndm { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--green); }
+.ndd { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 600; color: var(--text); line-height: 1; }
+.ndy { font-size: 0.62rem; color: var(--muted); }
+.news-item-body { display: flex; flex-direction: column; gap: 0.2rem; }
+.news-item-title { font-weight: 500; font-size: 0.92rem; line-height: 1.35; }
+.news-item-excerpt { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+.about-strip { background: var(--green-light); border-radius: var(--radius); padding: 2.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center; }
+@media (max-width: 640px) { .about-strip { grid-template-columns: 1fr; } }
+.about-strip-title { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 600; margin: 0.4rem 0 0.75rem; line-height: 1.3; }
+.about-strip-body { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+.stats { display: flex; flex-direction: column; gap: 1.25rem; }
+.stat { display: flex; flex-direction: column; }
+.stat-num { font-family: 'Fraunces', serif; font-size: 2.25rem; font-weight: 600; color: var(--green); line-height: 1; }
+.stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.15rem; }
+</style>

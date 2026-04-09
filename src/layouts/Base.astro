@@ -1,0 +1,253 @@
+---
+import '../styles/global.css';
+
+const { title = 'NECCD', description = 'New England Cycling Coalition for Diversity — Diversity, Equity and Inclusion on a Bike' } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+  { href: '/',        label: 'Home' },
+  { href: '/events',  label: 'Events' },
+  { href: '/news',    label: 'News' },
+  { href: '/about',   label: 'About' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+  <title>{title} — NECCD</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <span class="logo-abbr">NECCD</span>
+        <span class="logo-full">New England Cycling<br/>Coalition for Diversity</span>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle menu" id="navToggle">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="site-nav" id="siteNav">
+        {navLinks.map(link => (
+          <a
+            href={link.href}
+            class:list={['nav-link', { active: currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href)) }]}
+          >
+            {link.label}
+          </a>
+        ))}
+        <a href="https://band.us/@neccd" class="btn btn-primary nav-cta" target="_blank" rel="noopener">Join Band</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <div class="logo-abbr" style="font-size:1.1rem;">NECCD</div>
+        <p>New England Cycling Coalition for Diversity<br/>Diversity, Equity and Inclusion on a Bike</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Site</div>
+          {navLinks.map(l => <a href={l.href}>{l.label}</a>)}
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Connect</div>
+          <a href="https://band.us/@neccd" target="_blank" rel="noopener">Join our Band</a>
+          <a href="/contact">Contact us</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        &copy; {new Date().getFullYear()} New England Cycling Coalition for Diversity
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById('navToggle');
+    const nav = document.getElementById('siteNav');
+    toggle?.addEventListener('click', () => {
+      nav?.classList.toggle('open');
+      toggle.classList.toggle('open');
+    });
+  </script>
+
+</body>
+</html>
+
+<style>
+/* ── Header ─────────────────────────── */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 0.5px solid var(--border);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  gap: 1.5rem;
+}
+
+.logo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.logo-abbr {
+  font-family: 'Fraunces', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--green);
+}
+
+.logo-full {
+  font-size: 0.68rem;
+  color: var(--muted);
+  line-height: 1.3;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .logo-full { display: none; }
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.nav-link {
+  padding: 0.4rem 0.65rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.nav-link:hover { color: var(--text); background: var(--gray-50); }
+.nav-link.active { color: var(--green); font-weight: 500; }
+
+.nav-cta { margin-left: 0.5rem; font-size: 0.82rem; }
+
+/* Hamburger */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+@media (max-width: 720px) {
+  .nav-toggle { display: flex; }
+
+  .site-nav {
+    display: none;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: var(--bg);
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem 1.5rem;
+    border-bottom: 0.5px solid var(--border);
+    gap: 0.25rem;
+  }
+
+  .site-nav.open { display: flex; }
+  .nav-link { padding: 0.6rem 0.5rem; }
+  .nav-cta { margin-left: 0; margin-top: 0.5rem; text-align: center; }
+}
+
+/* ── Footer ─────────────────────────── */
+.site-footer {
+  background: var(--gray-50);
+  border-top: 0.5px solid var(--border);
+  margin-top: 4rem;
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3rem;
+  padding: 3rem 1.5rem 2rem;
+}
+
+@media (max-width: 600px) {
+  .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+.footer-brand p {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+.footer-links { display: flex; gap: 3rem; }
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.footer-col-title {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+
+.footer-col a {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.footer-col a:hover { color: var(--green); }
+
+.footer-bottom {
+  border-top: 0.5px solid var(--border);
+  padding: 1rem 1.5rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+</style>

@@ -1,0 +1,42 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/images"
+public_folder: "/images"
+
+collections:
+  - name: "events"
+    label: "Events"
+    folder: "src/content/events"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "date", format: "YYYY-MM-DD" }
+      - { label: "Time (e.g. 9:00 – 11:30 AM)", name: "time", widget: "string" }
+      - { label: "Location", name: "location", widget: "string" }
+      - label: "Category"
+        name: "tag"
+        widget: "select"
+        options: ["Ride", "Community", "Advocacy", "Resources"]
+      - { label: "Cost (e.g. Free)", name: "cost", widget: "string", required: false }
+      - { label: "Contact email", name: "contact", widget: "string", required: false }
+      - { label: "Short description (shown in listings)", name: "shortDescription", widget: "text" }
+      - { label: "Full description", name: "body", widget: "markdown" }
+
+  - name: "news"
+    label: "News"
+    folder: "src/content/news"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "date", format: "YYYY-MM-DD" }
+      - label: "Category"
+        name: "tag"
+        widget: "select"
+        options: ["Advocacy", "Community", "Resources", "News"]
+      - { label: "Author", name: "author", widget: "string", default: "NECCD", required: false }
+      - { label: "Excerpt (shown in listings)", name: "excerpt", widget: "text" }
+      - { label: "Full post", name: "body", widget: "markdown" }

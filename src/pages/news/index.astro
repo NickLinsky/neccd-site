@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const newsModules = import.meta.glob('../../content/news/*.md', { eager: true });
+const allNews = Object.entries(newsModules)
+  .map(([path, mod]) => ({ ...mod.frontmatter, slug: path.split('/').pop().replace('.md','') }))
+  .sort((a,b) => new Date(b.date) - new Date(a.date));
+
+const tagClass = { Ride: 'tag-ride', Community: 'tag-community', Advocacy: 'tag-advocacy', Resources: 'tag-resources', News: 'tag-news' };
+
+function fmtDate(d) {
+  return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+}
+---
+
+<Base title="News" description="News and updates from the New England Cycling Coalition for Diversity.">
+
+  <section class="section">
+    <div class="container">
+      <div class="section-label">Latest updates</div>
+      <h1 class="section-heading">News from NECCD</h1>
+
+      {allNews.length === 0 && (
+        <div class="empty-state"><p>No news posts yet. Check back soon!</p></div>
+      )}
+
+      <div class="news-grid">
+        {allNews.map((n, i) => (
+          <a href={`/news/${n.slug}`} class:list={['card', 'news-card', { featured: i === 0 }]}>
+            <div class="news-card-body">
+              <div class="news-card-meta">
+                <span class:list={['tag', tagClass[n.tag] || 'tag-news']}>{n.tag}</span>
+                <span class="news-card-date">{fmtDate(n.date)}</span>
+              </div>
+              <h2 class="news-card-title">{n.title}</h2>
+              <p class="news-card-excerpt">{n.excerpt}</p>
+              <span class="news-read-more">Read more →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</Base>
+
+<style>
+.news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+.news-card { display: block; text-decoration: none; }
+.news-card.featured { grid-column: 1 / -1; }
+.news-card-body { padding: 1.25rem; }
+.news-card-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; }
+.news-card-date { font-size: 0.78rem; color: var(--muted); }
+.news-card-title { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 600; line-height: 1.3; margin-bottom: 0.5rem; color: var(--text); }
+.featured .news-card-title { font-size: 1.5rem; }
+.news-card-excerpt { font-size: 0.875rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.75rem; }
+.news-read-more { font-size: 0.82rem; color: var(--green); }
+.empty-state { background: var(--gray-50); border-radius: var(--radius); padding: 2rem; color: var(--muted); font-size: 0.9rem; }
+</style>

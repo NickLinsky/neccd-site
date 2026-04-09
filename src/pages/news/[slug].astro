@@ -1,0 +1,70 @@
+---
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const modules = import.meta.glob('../../content/news/*.md', { eager: true });
+  return Object.entries(modules).map(([path, mod]) => ({
+    params: { slug: path.split('/').pop().replace('.md','') },
+    props:  { frontmatter: mod.frontmatter, Content: mod.default },
+  }));
+}
+
+const { frontmatter, Content } = Astro.props;
+const tagClass = { Ride: 'tag-ride', Community: 'tag-community', Advocacy: 'tag-advocacy', Resources: 'tag-resources', News: 'tag-news' };
+
+function fmtDate(d) {
+  return new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+}
+---
+
+<Base title={frontmatter.title} description={frontmatter.excerpt}>
+
+  <div class="container">
+    <nav class="breadcrumb">
+      <a href="/">Home</a><span>›</span>
+      <a href="/news">News</a><span>›</span>
+      <span>{frontmatter.title}</span>
+    </nav>
+  </div>
+
+  <article class="section">
+    <div class="container article-wrap">
+      <header class="article-header">
+        <span class:list={['tag', tagClass[frontmatter.tag] || 'tag-news']}>{frontmatter.tag}</span>
+        <h1 class="article-title">{frontmatter.title}</h1>
+        <div class="article-byline">
+          <time>{fmtDate(frontmatter.date)}</time>
+          {frontmatter.author && <span>· {frontmatter.author}</span>}
+        </div>
+        <p class="article-excerpt">{frontmatter.excerpt}</p>
+      </header>
+      <div class="article-content">
+        <Content />
+      </div>
+      <footer class="article-footer">
+        <a href="/news" class="btn btn-ghost">← Back to news</a>
+      </footer>
+    </div>
+  </article>
+
+</Base>
+
+<style>
+.breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--muted); padding-top: 1.5rem; }
+.breadcrumb a { color: var(--muted); }
+.breadcrumb a:hover { color: var(--green); }
+.breadcrumb span:last-child { color: var(--text); }
+.article-wrap { max-width: 680px; }
+.article-header { margin-bottom: 2.5rem; }
+.article-title { font-family: 'Fraunces', serif; font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 600; line-height: 1.25; margin: 0.6rem 0 0.5rem; }
+.article-byline { font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; }
+.article-excerpt { font-size: 1.05rem; color: var(--muted); line-height: 1.65; padding-bottom: 1.5rem; border-bottom: 0.5px solid var(--border); }
+.article-content { font-size: 0.95rem; line-height: 1.8; }
+.article-content p { margin-bottom: 1.1rem; }
+.article-content h2 { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.75rem; }
+.article-content ul, .article-content ol { padding-left: 1.25rem; margin-bottom: 1rem; }
+.article-content li { margin-bottom: 0.3rem; }
+.article-content a { color: var(--green); text-decoration: underline; }
+.article-content blockquote { border-left: 3px solid var(--green-mid); padding-left: 1rem; margin: 1.5rem 0; color: var(--muted); font-style: italic; }
+.article-footer { margin-top: 3rem; padding-top: 2rem; border-top: 0.5px solid var(--border); }
+</style>

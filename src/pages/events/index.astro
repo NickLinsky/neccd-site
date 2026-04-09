@@ -1,0 +1,95 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const eventModules = import.meta.glob('../../content/events/*.md', { eager: true });
+const today = new Date();
+today.setHours(0,0,0,0);
+
+const allEvents = Object.entries(eventModules)
+  .map(([path, mod]) => ({ ...mod.frontmatter, slug: path.split('/').pop().replace('.md','') }))
+  .sort((a,b) => new Date(a.date) - new Date(b.date));
+
+const upcoming = allEvents.filter(e => new Date(e.date) >= today);
+const past     = allEvents.filter(e => new Date(e.date) <  today).reverse();
+
+const tagClass = { Ride: 'tag-ride', Community: 'tag-community', Advocacy: 'tag-advocacy', Resources: 'tag-resources' };
+
+function fmtDay(d)  { return new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short'}); }
+function fmtNum(d)  { return new Date(d+'T12:00:00').getDate(); }
+function fmtMon(d)  { return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'}); }
+function fmtPast(d) { return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+---
+
+<Base title="Events" description="Upcoming rides and events from the New England Cycling Coalition for Diversity.">
+
+  <section class="section">
+    <div class="container">
+      <div class="section-label">Calendar</div>
+      <h1 class="section-heading">Upcoming events</h1>
+
+      {upcoming.length === 0 && (
+        <div class="empty-state">
+          <p>No upcoming events at the moment. Check back soon — we ride year-round!</p>
+        </div>
+      )}
+
+      <div class="events-list">
+        {upcoming.map(e => (
+          <a href={`/events/${e.slug}`} class="event-row card">
+            <div class="event-row-date">
+              <div class="erd-dow">{fmtDay(e.date)}</div>
+              <div class="erd-day">{fmtNum(e.date)}</div>
+              <div class="erd-mon">{fmtMon(e.date)}</div>
+              <div class="erd-time">{e.time}</div>
+            </div>
+            <div class="event-row-info">
+              <h2 class="event-row-title">{e.title}</h2>
+              <div class="event-row-loc">{e.location}</div>
+              <p class="event-row-desc">{e.shortDescription}</p>
+            </div>
+            <span class:list={['tag', tagClass[e.tag] || 'tag-ride']}>{e.tag}</span>
+          </a>
+        ))}
+      </div>
+
+      {past.length > 0 && (
+        <div class="past-section">
+          <div class="section-label" style="margin-bottom:1rem;">Past events</div>
+          <div class="past-list">
+            {past.map(e => (
+              <a href={`/events/${e.slug}`} class="past-item">
+                <span class="past-date">{fmtPast(e.date)}</span>
+                <span class="past-title">{e.title}</span>
+                <span class:list={['tag', tagClass[e.tag] || 'tag-ride']}>{e.tag}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+
+</Base>
+
+<style>
+.events-list { display: flex; flex-direction: column; gap: 1rem; }
+.event-row { display: grid; grid-template-columns: 110px 1fr auto; gap: 1.25rem; align-items: start; padding: 1.25rem; text-decoration: none; }
+@media (max-width: 600px) { .event-row { grid-template-columns: 80px 1fr; } .event-row .tag { display: none; } }
+.event-row-date { text-align: center; }
+.erd-dow { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.erd-day { font-family: 'Fraunces', serif; font-size: 2.25rem; font-weight: 600; line-height: 1; color: var(--text); }
+.erd-mon { font-size: 0.72rem; color: var(--green); font-weight: 500; }
+.erd-time { font-size: 0.7rem; color: var(--muted); margin-top: 0.25rem; }
+.event-row-info { min-width: 0; }
+.event-row-title { font-size: 1.05rem; font-weight: 500; margin-bottom: 0.3rem; }
+.event-row-loc { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
+.event-row-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+.empty-state { background: var(--gray-50); border-radius: var(--radius); padding: 2rem; color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+.past-section { margin-top: 3rem; padding-top: 2rem; border-top: 0.5px solid var(--border); }
+.past-list { display: flex; flex-direction: column; }
+.past-item { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 0; border-bottom: 0.5px solid var(--border); text-decoration: none; color: var(--muted); font-size: 0.88rem; transition: color 0.15s; }
+.past-item:hover { color: var(--text); }
+.past-item:last-child { border-bottom: none; }
+.past-date { font-size: 0.78rem; min-width: 110px; }
+.past-title { flex: 1; }
+</style>

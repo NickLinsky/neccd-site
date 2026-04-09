@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="About" description="About the New England Cycling Coalition for Diversity — our mission, history, and community.">
+
+  <section class="section">
+    <div class="container about-wrap">
+
+      <div class="section-label">Who we are</div>
+      <h1 class="section-heading">About NECCD</h1>
+
+      <div class="about-body">
+        <p class="lead">The New England Cycling Coalition for Diversity (NECCD) is a grassroots organization working to make cycling culture in New England welcoming, safe, and joyful for riders of all backgrounds — with a particular focus on communities historically excluded from cycling spaces.</p>
+
+        <p>We believe cycling is for everyone. But the reality is that cyclists of color, women, LGBTQ+ riders, and people from lower-income communities face unique barriers — from hostile road infrastructure, to feeling unwelcome in predominantly white cycling clubs, to the simple cost of a bike.</p>
+
+        <p>NECCD works to tear down those barriers through community rides, advocacy, education, and solidarity with other organizations building a more just and sustainable transportation future.</p>
+
+        <h2>What we do</h2>
+        <ul>
+          <li><strong>Community rides</strong> — Group rides that are no-drop, all-pace, and welcoming to cyclists of all backgrounds and experience levels.</li>
+          <li><strong>Advocacy</strong> — We show up at city halls, state houses, and transportation planning meetings to push for protected infrastructure in underserved neighborhoods.</li>
+          <li><strong>Education & resources</strong> — Free multilingual bike repair guides, safety resources, and skills clinics.</li>
+          <li><strong>Community building</strong> — We partner with other organizations, host social events, and build connections across communities.</li>
+        </ul>
+
+        <h2>Our name</h2>
+        <p>We honor <a href="https://en.wikipedia.org/wiki/Kittie_Knox" target="_blank" rel="noopener">Kittie Knox</a>, a pioneering Black cyclist from Cambridgeport, Massachusetts, who in the 1890s fought for her right to ride in the League of American Wheelmen despite their racial exclusion policies. Her courage and determination are an inspiration to everything we do.</p>
+
+        <h2>Get involved</h2>
+        <p>The best way to connect with NECCD is to <a href="https://band.us/@neccd" target="_blank" rel="noopener">join our Band community</a>, where we post ride announcements, updates, and photos. You can also <a href="/events">check our events calendar</a> and show up for a ride — newcomers are always welcome.</p>
+      </div>
+
+    </div>
+  </section>
+
+</Base>
+
+<style>
+.about-wrap { max-width: 680px; }
+
+.lead {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+.about-body { font-size: 0.95rem; line-height: 1.8; }
+.about-body p { margin-bottom: 1.1rem; color: var(--text); }
+.about-body h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 2rem 0 0.75rem;
+}
+.about-body ul { padding-left: 1.25rem; margin-bottom: 1.25rem; }
+.about-body li { margin-bottom: 0.5rem; }
+.about-body a { color: var(--green); text-decoration: underline; }
+</style>
