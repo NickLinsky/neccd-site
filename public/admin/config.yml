@@ -13,7 +13,7 @@ collections:
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
-      - { label: "Date", name: "date", widget: "date", format: "YYYY-MM-DD" }
+      - { label: "Date", name: "date", widget: "string", hint: "Format: YYYY-MM-DD e.g. 2026-06-15" }
       - { label: "Time (e.g. 9:00 – 11:30 AM)", name: "time", widget: "string" }
       - { label: "Location", name: "location", widget: "string" }
       - label: "Category"
@@ -32,7 +32,7 @@ collections:
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
-      - { label: "Date", name: "date", widget: "date", format: "YYYY-MM-DD" }
+      - { label: "Date", name: "date", widget: "string", hint: "Format: YYYY-MM-DD e.g. 2026-06-15" }
       - label: "Category"
         name: "tag"
         widget: "select"
