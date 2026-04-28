@@ -22,8 +22,8 @@
   --gray-300:    #C4C3BB;
   --gray-500:    #888780;
   --gray-700:    #444441;
-  --gray-900:    #1E1E1C;
-  --text:        #1E1E1C;
+  --gray-900:    #000000;
+  --text:        #000000;
   --muted:       #5F5E5A;
   --border:      rgba(0,0,0,0.1);
   --border-mid:  rgba(0,0,0,0.18);
